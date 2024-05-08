@@ -39,6 +39,7 @@ def pronounciation(number):
         return hundred_pronounciation(number)
 
 user_input = int(input('Please type a number: '))
+
 # Separates the input number with a thousands separator
 user_input_seperator = f"{user_input:,}"
 # Splits the number into each individual number
@@ -47,6 +48,10 @@ user_input_seperator_list = user_input_seperator.split(',')
 user_input_seperator_list.reverse()
 
 for number in reversed(range(len(user_input_seperator_list))):
+    if user_input == 0:
+        print('zero')
+        break
+    
     individual_number = pronounciation(int(user_input_seperator_list[number]))
     # Avoids pronounciation of individual number that contains only zeros
     if individual_number is None:
