@@ -56,4 +56,5 @@ for number in reversed(range(len(user_input_seperator_list))):
     # Avoids pronounciation of individual number that contains only zeros
     if individual_number is None:
         continue
+    # slices \n from the textfile and prints output in a single line
     print(f"{individual_number} {number_names[number][:-1].lower()}", end=' ')
