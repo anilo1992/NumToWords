@@ -1,60 +1,61 @@
-decimal_digit = ('', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine')
-tens_digit = ('', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety')
-# Handle numbers between 11-19 in order to avoid pronounciation of "ten one", "ten two", "ten three", ...
-irregular_numbers = {11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen', 15: 'fifteen', 16: 'sixteen', 17: 'seventeen', 18: 'eighteen', 19: 'nineteen'}
+digits = {0: "", 1: "eins", 2: "zwei", 3: "drei", 4: "vier", 5: "fünf", 6: "sechs", 7: "sieben", 8: "acht", 9: "neun"}
+tens = {0: "", 1: "zehn", 2: "zwanzig", 3: "dreißig", 4: "vierzig", 5: "fünfzig", 6: "sechzig", 7: "siebzig", 8: "achtzig", 9: "neunzig"}
+exceptionalNumbers = {11: "elf", 12: "zwölf", 17: "siebzehn"}
 
-with open('NumToWord copy\\number_names.txt', 'r', encoding='utf-8') as textfile:
-    number_names = textfile.readlines()
+with open(r"C:\Users\anilo\Documents\Projekte\NumberToWords\numberNames.txt", 'r', encoding='utf-8') as textFile:
+    numberNames = [line.strip() for line in textFile.readlines()]
 
-# Pronounciation of single digit number
-def decimal_pronounciation(number):
-    return decimal_digit[number]
+def twoDigitPronounciation(number):
+    firstDigit = number // 10
+    lastDigit = number % 10
 
-# Pronounciation of double digit number
-def tens_digit_pronounciation(number):
-    last_digit = number % 10
-    first_digit = number // 10
+    if number in digits:
+        return digits[number]
+    elif number in exceptionalNumbers:
+        return exceptionalNumbers[number]
+    elif lastDigit == 0:
+        return tens[firstDigit]
+    return "{}und{}".format(digits[lastDigit], tens[firstDigit])
 
-    if number in irregular_numbers:
-        return irregular_numbers[number]
+def hundredPronounciation(number):
+    firstDigitOfHundred = number // 100
+    lastDigitsOfHundred = number % 100
+    lastDigitsOfHundredWrittenOut = twoDigitPronounciation(lastDigitsOfHundred)
+
+    if firstDigitOfHundred == 1:
+        return "einhundert{}".format(lastDigitsOfHundredWrittenOut)
+    return "{}hundert{}".format(digits[firstDigitOfHundred], lastDigitsOfHundredWrittenOut)
+    
+def seperateNumbers(number):
+    numberFormatted = "{:,}".format(number)
+    numberSeperated = numberFormatted.split(",")
+    numberSeperatedLength = len(numberSeperated)
+    return numberSeperated, numberSeperatedLength
+
+def outwriteNumber(userInput):
+    if userInput == 0:
+        print("null")
+    elif userInput == 1:
+        print("eins")
     else:
-        if last_digit == 0:
-            return tens_digit[first_digit]
-        else:
-            return f"{tens_digit[first_digit]}{decimal_pronounciation(last_digit)}"
+        individualNumbers = seperateNumbers(userInput)[0]
+        index = seperateNumbers(userInput)[1]-1
 
-# Pronounciation of three digit number
-def hundred_pronounciation(number):
-    first_digit = number // 100
-    last_digits = number % 100
+        for individualNumber in individualNumbers:
+            individualNumber = int(individualNumber)
+            correspondingNumberName = numberNames[index]
 
-    return f"{decimal_pronounciation(first_digit)}hundred{tens_digit_pronounciation(last_digits)}"
-    
-def pronounciation(number):
-    if 1 <= number <= 9:
-        return decimal_pronounciation(number)
-    elif 10 <= number <= 99:
-        return tens_digit_pronounciation(number)
-    elif 100 <= number <= 999:
-        return hundred_pronounciation(number)
+            if individualNumber == 0:
+                continue
+            elif individualNumber == 1:
+                if correspondingNumberName == "Tausend":
+                    print("eintausend".format())
+                else:
+                    print("eine {}".format(correspondingNumberName), end=" ")
+            elif 2 <= individualNumber <= 99:
+                print("{} {}".format(twoDigitPronounciation(individualNumber), correspondingNumberName), end=" ")
+            else:
+                print("{} {}".format(hundredPronounciation(individualNumber), correspondingNumberName), end=" ")
+            index -= 1
 
-user_input = int(input('Please type a number: '))
-
-# Separates the input number with a thousands separator
-user_input_seperator = f"{user_input:,}"
-# Splits the number into each individual number
-user_input_seperator_list = user_input_seperator.split(',')
-# Reverses the lists, so each iteration of the loop corresponds its number name in order
-user_input_seperator_list.reverse()
-
-for number in reversed(range(len(user_input_seperator_list))):
-    if user_input == 0:
-        print('zero')
-        break
-    
-    individual_number = pronounciation(int(user_input_seperator_list[number]))
-    # Avoids pronounciation of individual number that contains only zeros
-    if individual_number is None:
-        continue
-    # slices \n from the textfile and prints output in a single line
-    print(f"{individual_number} {number_names[number][:-1].lower()}", end=' ')
+outwriteNumber(123456789)
