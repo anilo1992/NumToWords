@@ -1,13 +1,18 @@
 # NumToWords
 
-Welcome to NumToWords. This Python script converts numeric input into its corresponding English word representation. 
+Dieses Skript akzeptiert eine positive Zahl mit maximal 63 Kommastellen und schreibt die Zahl in Wörtern um. 
 
-## Explanation
+## Installation
 
-In general, I have written the code according to logic, unfortunately I lack the language to explain the logic. Therefore, I apologise if I cannot explain it properly.
+Bitte vergewissern Sie sich, dass ```numberToWords.py``` und ```numberNames.txt``` im selben Ordner sind. Bitte geben Sie den lokalen Pfad der Textdatei ```numberNames.txt``` in die ```open```-Funktion ein.
 
-First of all, The first values in the the tuples `decimal_digit` and `tens_digit` are empty in order to avoid pronounciation of zeros since Python is a zero-indexed language.
+## Verwendung
 
-Since the numbers between 11 and 19 don't match the pattern between 20-99, I created the tuple `irregular_numbers = {11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen', 15: 'fifteen', 16: 'sixteen', 17: 'seventeen', 18: 'eighteen', 19: 'nineteen'}` to compensate this.
+Bitte geben Sie die gewünschte Zahl in die Funktion ```outwriteNumber()``` ein. Die Funktion akzeptiert nur positive Zahlen. 
 
-Furthermore, the textfile contains a list of the names for individual numbers. The first line of the textfile is empty, since Python is a zero-indexed language and due to the logic of my code, the last individual number doesn't have a name. For example the number `1,234` is pronounced "one-thousand", followed by the pronounciation of just "twohundredthirtyfour".
+Nehmen wir als Beispiel die Zahl 123456789:
+
+```
+outwriteNumber(123456789)
+einhundertdreiundzwanzig Million(en) vierhundertsechsundfünfzig Tausend siebenhundertneunundachtzig
+```
